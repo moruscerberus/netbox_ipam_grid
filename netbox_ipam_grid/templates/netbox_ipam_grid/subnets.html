@@ -1,0 +1,160 @@
+{% extends 'base/layout.html' %}
+{% block title %}Subnets{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+
+  {# ---- left: subnet list ---- #}
+  <div class="col-12 col-lg-3">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+<span class="fw-bold">Subnets</span>
+<div class="btn-list">
+<a href="{% url 'plugins:netbox_ipam_grid:subnet_add' %}" class="btn btn-sm btn-primary"><i class="mdi mdi-plus-thick"></i> Add</a>
+<button id="delete-selected" class="btn btn-sm btn-danger" disabled><i class="mdi mdi-trash-can-outline"></i> Delete</button>
+</div>
+</div>
+      <div class="list-group list-group-flush">
+        {% for subnet in subnets %}
+          <div class="list-group-item d-flex align-items-center">
+<input class="form-check-input me-2 subnet-check" type="checkbox" value="{{ subnet.pk }}">
+<a href="?subnet={{ subnet.pk }}" class="flex-grow-1 text-decoration-none"
+             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center{% if selected and subnet.pk == selected.pk %} active{% endif %}">
+            <span class="font-monospace">{{ subnet.prefix }}</span>
+            {% if subnet.status %}
+              <span class="badge text-bg-secondary">{{ subnet.get_status_display }}</span>
+            {% endif %}
+          </a>
+</div>
+{% empty %}
+          <div class="list-group-item text-muted">No subnets yet. Click <strong>Add</strong>.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ---- right: selected subnet grid ---- #}
+  <div class="col-12 col-lg-9">
+    {% if not selected %}
+      <div class="card"><div class="card-body text-muted">Select a subnet on the left, or add one.</div></div>
+    {% else %}
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+            <span class="fw-bold font-monospace fs-4">{{ selected.prefix }}</span>
+            {% if selected.status %}<span class="badge text-bg-secondary">{{ selected.get_status_display }}</span>{% endif %}
+          </div>
+          <div class="btn-list">
+
+<a href="{% url 'plugins:netbox_ipam_grid:deviceip_add' %}"
+   class="btn btn-success">
+<i class="mdi mdi-plus-thick"></i>
+Add IP
+</a>
+
+<a href="{% url 'plugins:netbox_ipam_grid:deviceip_import' %}"
+   class="btn btn-primary">
+<i class="mdi mdi-upload"></i>
+Import CSV
+</a>
+
+<a href="{% url 'plugins:netbox_ipam_grid:subnet_edit' pk=selected.pk %}"
+   class="btn btn-outline-secondary">
+<i class="mdi mdi-pencil"></i>
+</a>
+
+<a href="{{ selected.get_absolute_url }}"
+   class="btn btn-outline-secondary">
+Open in IPAM
+</a>
+
+</div>
+        </div>
+
+        <div class="card-body">
+          {% if too_big %}
+            <div class="alert alert-info mb-0">
+              {% if family != 4 %}
+                The visual grid is available for IPv4 subnets only.
+              {% else %}
+                This subnet has {{ size }} addresses, above the display limit ({{ max_hosts }}).
+                Pick a smaller prefix (e.g. a /24) to see the grid.
+              {% endif %}
+            </div>
+          {% else %}
+            {# utilization #}
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <small class="text-muted">Utilisation</small>
+              <small class="text-muted">{{ used }} / {{ total }} used ({{ pct }}%)</small>
+            </div>
+            <div class="progress mb-3" style="height:6px;">
+              <div class="progress-bar" role="progressbar" style="width: {{ pct }}%;"></div>
+            </div>
+
+            {# grid #}
+            <div class="ip-grid mb-3">
+              {% for cell in cells %}
+                <a href="{{ cell.edit_url }}"
+                   class="ip-cell{% if not cell.ip %} ip-free{% endif %}"
+                   {% if cell.color %}style="background:{{ cell.color }};border-color:{{ cell.color }};color:#fff;"{% endif %}
+                   data-bs-toggle="tooltip"
+                   title="{{ cell.address }} — {{ cell.state }}{% if cell.device %} · {{ cell.device }}{% elif cell.vm %} · {{ cell.vm }}{% endif %}">
+                  {{ cell.label }}
+                </a>
+              {% endfor %}
+            </div>
+
+            {# legend #}
+            <div class="d-flex flex-wrap gap-3">
+              {% for label, color in legend %}
+                <span class="d-inline-flex align-items-center gap-1">
+                  <span class="legend-swatch{% if not color %} legend-free{% endif %}"
+                        {% if color %}style="background:{{ color }};border-color:{{ color }};"{% endif %}></span>
+                  <small class="text-muted">{{ label }}</small>
+                </span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .ip-grid { display:flex; flex-wrap:wrap; gap:5px; }
+  .ip-cell {
+    width:42px; height:32px; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-variant-numeric:tabular-nums; border-radius:6px;
+    text-decoration:none; transition:transform .05s ease, box-shadow .1s ease;
+    border:1px solid var(--tblr-border-color, #2b3648);
+    color: var(--tblr-body-color, #c9d1d9);
+    background: var(--tblr-bg-surface-secondary, rgba(255,255,255,.03));
+  }
+  .ip-cell.ip-free { opacity:.5; }
+  .ip-cell:hover { transform:translateY(-1px); box-shadow:0 0 0 2px var(--tblr-primary, #3b82f6); opacity:1; z-index:1; }
+  .legend-swatch {
+    width:14px; height:14px; border-radius:4px; display:inline-block;
+    border:1px solid var(--tblr-border-color, #2b3648);
+  }
+  .legend-free { background: var(--tblr-bg-surface-secondary, rgba(255,255,255,.03)); opacity:.6; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btn=document.getElementById("delete-selected");
+
+    function update(){
+        btn.disabled=document.querySelectorAll(".subnet-check:checked").length===0;
+    }
+
+    document.querySelectorAll(".subnet-check").forEach(cb=>{
+        cb.addEventListener("change",update);
+    });
+
+    update();
+});
+</script>
+
+{% endblock %}

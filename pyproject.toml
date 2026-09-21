@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netbox-ipam-grid"
+version = "0.3.0"
+description = "Assign IP addresses directly to devices in NetBox with an automated native-IPAM workflow."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Jörgen Gullstrand", email = "moruscerberus@gmail.com" }]
+license = { text = "Apache-2.0" }
+dependencies = ["netaddr"]
+
+[tool.setuptools.packages.find]
+include = ["netbox_ipam_grid*"]
+
+[tool.setuptools.package-data]
+netbox_ipam_grid = ["templates/**/*.html"]
