@@ -35,7 +35,7 @@ class DeviceIPsConfig(PluginConfig):
     author_email = "moruscerberus@gmail.com"
     base_url = "device-ips"
 
-    # Targeting NetBox Community 4.6.x.
+    # Targeting NetBox Community 4.6.x - 4.7.x.
     min_version = "4.6.0"
     max_version = "4.7.99"
 
