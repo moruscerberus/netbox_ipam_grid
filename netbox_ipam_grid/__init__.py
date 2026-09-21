@@ -31,13 +31,13 @@ class DeviceIPsConfig(PluginConfig):
         "native-IPAM workflow."
     )
     version = __version__
-    author = "Your Name"
-    author_email = "you@example.com"
+    author = "Jörgen Gullstrand"
+    author_email = "moruscerberus@gmail.com"
     base_url = "device-ips"
 
     # Targeting NetBox Community 4.6.x.
     min_version = "4.6.0"
-    max_version = "4.6.99"
+    max_version = "4.7.99"
 
     default_settings = {
         # Name of the interface the plugin creates/uses on each device to
