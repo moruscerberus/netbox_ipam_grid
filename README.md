@@ -91,6 +91,34 @@ Then restart NetBox (`systemctl restart netbox netbox-rq`).
   stale primary reference on the old device).
 * Every device detail page gets a **IPAM Grid** card listing that device's IPs.
 
+## Screenshots
+
+### Subnet grid
+
+The subnet view provides a visual IPAM grid with utilization, IP state indicators,
+and VLAN information alongside the prefix.
+
+![Subnet grid](examples/subnets.png)
+
+### Add a prefix
+
+Create a native NetBox prefix directly from the plugin.
+
+![Add a prefix](examples/new_prefix.png)
+
+### Add an IP address
+
+Select an address from the grid and assign its status, tags, device or virtual
+machine, and optionally make it the primary IP.
+
+![Add an IP address](examples/new_ip.png)
+
+### NetBox navigation
+
+The plugin adds **Subnets** under the IPAM navigation menu.
+
+![NetBox IPAM navigation](examples/sidebar.png)
+
 ## Permissions
 
 The plugin reads and writes native IPAM objects, so users need the standard
