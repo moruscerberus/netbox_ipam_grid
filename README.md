@@ -5,7 +5,7 @@ device** through one simple form — with a searchable *"choose a device"*
 dropdown and an IP **state** selector — while the plugin does the native-IPAM
 plumbing for you.
 
-Target: **NetBox Community 4.6.x** (tested against 4.6.7 · Python 3.12 · Django 5.2).
+Target: **NetBox Community 4.6.x–4.7.x** (tested against NetBox 4.7.1 · Python 3.13 · Django 5.2).
 
 ## What it does (and why it's built this way)
 
@@ -91,34 +91,6 @@ Then restart NetBox (`systemctl restart netbox netbox-rq`).
   stale primary reference on the old device).
 * Every device detail page gets a **IPAM Grid** card listing that device's IPs.
 
-## Screenshots
-
-### Subnet grid
-
-The subnet view provides a visual IPAM grid with utilization, IP state indicators,
-and VLAN information alongside the prefix.
-
-![Subnet grid](examples/subnets.png)
-
-### Add a prefix
-
-Create a native NetBox prefix directly from the plugin.
-
-![Add a prefix](examples/new_prefix.png)
-
-### Add an IP address
-
-Select an address from the grid and assign its status, tags, device or virtual
-machine, and optionally make it the primary IP.
-
-![Add an IP address](examples/new_ip.png)
-
-### NetBox navigation
-
-The plugin adds **Subnets** under the IPAM navigation menu.
-
-![NetBox IPAM navigation](examples/sidebar.png)
-
 ## Permissions
 
 The plugin reads and writes native IPAM objects, so users need the standard
@@ -169,3 +141,8 @@ native IPAM (a "subnet" is an `ipam.Prefix`; each cell is an `ipam.IPAddress`).
 * Creating/assigning touches native IPAM + devices, so users need the matching
   `ipam.*` and `dcim.*` permissions (add/change on ipaddress, prefix, interface,
   device).
+
+# License
+
+MIT License.
+
