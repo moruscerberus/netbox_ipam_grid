@@ -20,7 +20,7 @@
 <input class="form-check-input me-2 subnet-check" type="checkbox" value="{{ subnet.pk }}">
 <a href="?subnet={{ subnet.pk }}" class="flex-grow-1 text-decoration-none"
              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center{% if selected and subnet.pk == selected.pk %} active{% endif %}">
-            <span class="font-monospace">{{ subnet.prefix }}{% if subnet.vlan %} — VLAN {{ subnet.vlan.vid }} — {{ subnet.vlan.name }}{% endif %}</span>
+            <div><div class="font-monospace">{{ subnet.prefix }}</div>{% if subnet.vlan %}<div class="text-muted">VLAN {{ subnet.vlan.vid }} · {{ subnet.vlan.name }}</div>{% endif %}</div>
             {% if subnet.status %}
               <span class="badge text-bg-secondary">{{ subnet.get_status_display }}</span>
             {% endif %}
@@ -41,7 +41,7 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center gap-2">
-            <span class="fw-bold font-monospace fs-4">{{ selected.prefix }}{% if selected.vlan %} — VLAN {{ selected.vlan.vid }} — {{ selected.vlan.name }}{% endif %}</span>
+            <span class="fw-bold font-monospace fs-4">{{ selected.prefix }}</span>
             {% if selected.status %}<span class="badge text-bg-secondary">{{ selected.get_status_display }}</span>{% endif %}
           </div>
           <div class="btn-list">
