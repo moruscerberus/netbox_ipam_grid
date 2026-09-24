@@ -91,6 +91,24 @@ Then restart NetBox (`systemctl restart netbox netbox-rq`).
   stale primary reference on the old device).
 * Every device detail page gets a **IPAM Grid** card listing that device's IPs.
 
+## Screenshots
+
+### Subnet grid
+
+![Subnet grid](examples/subnets.png)
+
+### Add a prefix
+
+![Add prefix](examples/new_prefix.png)
+
+### Add an IP address
+
+![Add IP](examples/new_ip.png)
+
+### Navigation
+
+![Navigation](examples/sidebar.png)
+
 ## Permissions
 
 The plugin reads and writes native IPAM objects, so users need the standard
@@ -133,6 +151,7 @@ native IPAM (a "subnet" is an `ipam.Prefix`; each cell is an `ipam.IPAddress`).
 * **IPAM Grid list** now has **Add**, **Import** (CSV), and **Export** buttons.
 
 ### Notes / limits
+
 * The grid renders IPv4 subnets up to `grid_max_hosts` addresses (default 1024,
   i.e. up to a /22). Larger or IPv6 subnets show a notice instead — rendering
   tens of thousands of cells is slow and unreadable.
@@ -145,4 +164,3 @@ native IPAM (a "subnet" is an `ipam.Prefix`; each cell is an `ipam.IPAddress`).
 # License
 
 MIT License.
-
